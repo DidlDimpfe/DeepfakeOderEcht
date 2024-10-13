@@ -1,24 +1,22 @@
 import QuestionPick from "@/components/Questions";
-import { DatabaseQuestionTable } from "@/lib/db";
+import { getQuestion } from "@/lib/queries";
+import { notFound } from "next/navigation";
 
-export default async function Page({ questionId }: { questionId: string }) {
-  // TODO: Fetch question from database
+export default async function Page({
+  params: { questionId },
+}: {
+  params: { questionId: string };
+}) {
+  const question = await getQuestion(questionId);
 
-  const question: DatabaseQuestionTable = {
-    id: "aw9ußdhwqßadw",
-    correct_video_id: "9HBpx3Qbyrs", // oEiV6MYzTCE
-    false_video_id: "Db-YCkWsRBk",
-    created_at: new Date(2024, 9, 9),
-    updated_at: new Date(2024, 9, 9),
-  };
+  if (!question) {
+    notFound();
+  }
 
-  const randomBool = Math.random() < 0.5;
-  const firstVideoId = randomBool
-    ? question.correct_video_id
-    : question.false_video_id;
-  const secondVideoId = randomBool
-    ? question.false_video_id
-    : question.correct_video_id;
+  const [firstVideoId, secondVideoId] =
+    Math.random() < 0.5
+      ? [question.real_video_id, question.fake_video_id]
+      : [question.fake_video_id, question.real_video_id];
 
   return (
     <main className="relative grid flex-1 grid-rows-2 xl:grid-cols-2 xl:grid-rows-1">

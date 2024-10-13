@@ -8,14 +8,22 @@ SET time_zone = '+00:00';
 CREATE TABLE `question` (
   `id` varchar(36) NOT NULL DEFAULT (uuid()),
   `created_at` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-  `updatet_at` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `updated_at` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
   `celebrity_first_name` varchar(20) NOT NULL,
   `celebrity_last_name` varchar(20) NOT NULL,
-  `correct_video_id` varchar(11) NOT NULL,
-  `false_video_id` varchar(11) NOT NULL,
+  `real_video_id` varchar(11) NOT NULL,
+  `fake_video_id` varchar(11) NOT NULL,
+  `real_dataset_id` varchar(10) NOT NULL,
+  `fake_dataset_id` varchar(18) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-INSERT INTO question (id, celebrity_first_name, celebrity_last_name, correct_video_id, false_video_id, dataset_id) VALUES ("190c9ffd-4125-46d4-b7de-29cc8790e3da", "Aamir", "Khan", "buQj3dG5Yk8", "gOabuXIPraU", "id0_0002");
-INSERT INTO question (id, celebrity_first_name, celebrity_last_name, correct_video_id, false_video_id, dataset_id) VALUES ("3ef71cd6-a56c-40c6-82bf-b32dbb9a8493", "Will", "Smith", "9HBpx3Qbyrs", "Db-YCkWsRBk", "id5_0003");
-INSERT INTO question (id, celebrity_first_name, celebrity_last_name, correct_video_id, false_video_id, dataset_id) VALUES ("2e0bb9b8-75a5-47e5-8d17-f552fb079911", "Ryan", "Reynolds", "kEZKMAfbook", "x9BQpjW3nSU", "id3_0007");
+INSERT INTO question (id, celebrity_first_name, celebrity_last_name, real_video_id, fake_video_id, real_dataset_id, fake_dataset_id) VALUES ("190c9ffd-4125-46d4-b7de-29cc8790e3da", "Aamir", "Khan", "buQj3dG5Yk8", "gOabuXIPraU", "id0_0002", "id0_id1_0002");
+INSERT INTO question (id, celebrity_first_name, celebrity_last_name, real_video_id, fake_video_id, real_dataset_id, fake_dataset_id) VALUES ("3ef71cd6-a56c-40c6-82bf-b32dbb9a8493", "Will", "Smith", "9HBpx3Qbyrs", "Db-YCkWsRBk", "id5_0003", "id5_id60_0003");
+INSERT INTO question (id, celebrity_first_name, celebrity_last_name, real_video_id, fake_video_id, real_dataset_id, fake_dataset_id) VALUES ("2e0bb9b8-75a5-47e5-8d17-f552fb079911", "Ryan", "Reynolds", "kEZKMAfbook", "x9BQpjW3nSU", "id3_0007", "id3_id17_0007");
+INSERT INTO question (id, celebrity_first_name, celebrity_last_name, real_video_id, fake_video_id, real_dataset_id, fake_dataset_id) VALUES ("633e60e1-8fac-4c71-8e35-38c067158457", "Leonardo", "DiCaprio", "gS9Odil-NJo", "TMMs1a5fsiA", "id19_0008", "id19_id28_0008");
+INSERT INTO question (id, celebrity_first_name, celebrity_last_name, real_video_id, fake_video_id, real_dataset_id, fake_dataset_id) VALUES 
+("7d0dd0ea-c83a-4079-8185-66386f3a508c", "Chris", "Hemsworth", "IB0W-Y-IGvE", "FspscTF12Ug", "id17_0006", "id17_id16_0006");
+// TODO 
+INSERT INTO question (id, celebrity_first_name, celebrity_last_name, real_video_id, fake_video_id, real_dataset_id, fake_dataset_id) VALUES 
+("ab9ab6bd-f939-4d5a-a596-26d33bc33833", "Emma", "Watson", "TODO", "TODO", "id11_0009", "id11_id7_0009");

@@ -1,6 +1,9 @@
+import { getRandomQuestionId } from "@/lib/queries";
 import { redirect } from "next/navigation";
 
-export default function Page() {
-  // TODO: Get random question id from database (not answered yet)
-  return redirect("/oEiV6MYzTCE");
+export const dynamic = "force-dynamic";
+
+export default async function Page() {
+  const questionId = await getRandomQuestionId();
+  return redirect(`/${questionId}`);
 }

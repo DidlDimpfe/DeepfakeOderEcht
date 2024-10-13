@@ -14,7 +14,7 @@ export default function Heading({
   size = "md",
 }: HeadingProps) {
   const sizeStyles = {
-    lg: "text-5xl font-semibold tracking-tighter xl:text-7xl",
+    lg: "text-5xl font-semibold tracking-tight xl:text-7xl",
     md: "text-3xl font-semibold tracking-tight xl:text-5xl",
     sm: "text-xl font-semibold xl:text-3xl",
     xs: "text-lg font-semibold xl:text-xl",
@@ -23,6 +23,6 @@ export default function Heading({
   return React.createElement(
     as,
     { className: `${sizeStyles[size]} ${className}` },
-    children
+    children,
   );
 }
