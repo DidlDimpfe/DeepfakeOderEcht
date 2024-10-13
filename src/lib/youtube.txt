@@ -1,0 +1,4 @@
+Title: "{firstName} {lastName}"
+Description: "Dieses Video ist entweder echt oder ein Deepfake. Was glaubst du? Teste es hier: https://deepfakeoderecht.org/{questionId}"
+Playlist: Real/Fake
+Kids: Its not made for kids

@@ -1,0 +1,21 @@
+CREATE DATABASE deepfake_oder_echt;
+
+USE deepfake_oder_echt;
+
+SET GLOBAL time_zone = '+00:00';
+SET time_zone = '+00:00';
+
+CREATE TABLE `question` (
+  `id` varchar(36) NOT NULL DEFAULT (uuid()),
+  `created_at` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `updatet_at` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `celebrity_first_name` varchar(20) NOT NULL,
+  `celebrity_last_name` varchar(20) NOT NULL,
+  `correct_video_id` varchar(11) NOT NULL,
+  `false_video_id` varchar(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+INSERT INTO question (id, celebrity_first_name, celebrity_last_name, correct_video_id, false_video_id, dataset_id) VALUES ("190c9ffd-4125-46d4-b7de-29cc8790e3da", "Aamir", "Khan", "buQj3dG5Yk8", "gOabuXIPraU", "id0_0002");
+INSERT INTO question (id, celebrity_first_name, celebrity_last_name, correct_video_id, false_video_id, dataset_id) VALUES ("3ef71cd6-a56c-40c6-82bf-b32dbb9a8493", "Will", "Smith", "9HBpx3Qbyrs", "Db-YCkWsRBk", "id5_0003");
+INSERT INTO question (id, celebrity_first_name, celebrity_last_name, correct_video_id, false_video_id, dataset_id) VALUES ("2e0bb9b8-75a5-47e5-8d17-f552fb079911", "Ryan", "Reynolds", "kEZKMAfbook", "x9BQpjW3nSU", "id3_0007");
