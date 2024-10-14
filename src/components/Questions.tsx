@@ -1,26 +1,43 @@
 "use client";
 
+import { addGuess } from "@/lib/actions";
 import Video from "./Video";
 
 interface QuestionPickProps {
   firstVideoId: string;
   secondVideoId: string;
+  questionId: string;
 }
 
 export default function QuestionPick({
   firstVideoId,
   secondVideoId,
+  questionId,
 }: QuestionPickProps) {
-  // TODO on click to server action with question id
+  function handleClick(videoId: string) {
+    addGuess(questionId, videoId, "temp");
+  }
 
   return (
     <>
-      <div className="m-4 flex items-center justify-center">
-        <Video videoId={firstVideoId} />
+      <div
+        className="flex items-center justify-center"
+        onClick={() => handleClick(firstVideoId)}
+      >
+        <Video
+          videoId={firstVideoId}
+          className="mx-[4%] mt-12 md:mx-[8%] md:my-0"
+        />
       </div>
 
-      <div className="m-4 flex items-center justify-center">
-        <Video videoId={secondVideoId} />
+      <div
+        className="flex items-center justify-center"
+        onClick={() => handleClick(secondVideoId)}
+      >
+        <Video
+          videoId={secondVideoId}
+          className="mx-[4%] mb-12 md:mx-[8%] md:my-0"
+        />
       </div>
     </>
   );

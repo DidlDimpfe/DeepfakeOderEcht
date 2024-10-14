@@ -2,6 +2,7 @@ import { FieldPacket } from "mysql2";
 import { DatabaseQuestionTable, queryDatabase } from "./db";
 import {
   QUESTION_COLUMN_CELEBRITY_FIRST_NAME,
+  QUESTION_COLUMN_CELEBRITY_GENDER,
   QUESTION_COLUMN_CELEBRITY_LAST_NAME,
   QUESTION_COLUMN_CREATED_AT,
   QUESTION_COLUMN_FAKE_VIDEO_ID,
@@ -48,7 +49,7 @@ interface Question
 export async function getQuestion(questionId: string) {
   try {
     const [[question]]: [Question[], FieldPacket[]] = await queryDatabase(
-      `SELECT ${QUESTION_COLUMN_ID}, ${QUESTION_COLUMN_CREATED_AT}, ${QUESTION_COLUMN_UPDATED_AT}, ${QUESTION_COLUMN_REAL_VIDEO_ID}, ${QUESTION_COLUMN_FAKE_VIDEO_ID}, ${QUESTION_COLUMN_CELEBRITY_FIRST_NAME}, ${QUESTION_COLUMN_CELEBRITY_LAST_NAME} FROM ${QUESTION_TABLE_NAME} WHERE ${QUESTION_COLUMN_ID} = ?`,
+      `SELECT ${QUESTION_COLUMN_ID}, ${QUESTION_COLUMN_CREATED_AT}, ${QUESTION_COLUMN_UPDATED_AT}, ${QUESTION_COLUMN_REAL_VIDEO_ID}, ${QUESTION_COLUMN_FAKE_VIDEO_ID}, ${QUESTION_COLUMN_CELEBRITY_FIRST_NAME}, ${QUESTION_COLUMN_CELEBRITY_LAST_NAME}, ${QUESTION_COLUMN_CELEBRITY_GENDER} FROM ${QUESTION_TABLE_NAME} WHERE ${QUESTION_COLUMN_ID} = ?`,
       [questionId],
     );
 
@@ -58,6 +59,30 @@ export async function getQuestion(questionId: string) {
       throw new QueryError(`Failed to fetch question: ${error.message}`);
     } else {
       throw new QueryError(`Failed to fetch question: ${String(error)}`);
+    }
+  }
+}
+
+export async function isGuessCorrect(
+  questionId: string,
+  guessedVideoId: string,
+) {
+  interface QueryResult {
+    real_video_id: string;
+  }
+
+  try {
+    const [[result]]: [QueryResult[], FieldPacket[]] = await queryDatabase(
+      `SELECT ${QUESTION_COLUMN_REAL_VIDEO_ID} FROM ${QUESTION_TABLE_NAME} WHERE ${QUESTION_COLUMN_ID} = ?`,
+      [questionId],
+    );
+
+    return result.real_video_id === guessedVideoId;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new QueryError(`Failed to check guess: ${error.message}`);
+    } else {
+      throw new QueryError(`Failed to check guess: ${String(error)}`);
     }
   }
 }

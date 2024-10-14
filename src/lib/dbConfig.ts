@@ -4,6 +4,7 @@ export const QUESTION_COLUMN_CREATED_AT = "created_at";
 export const QUESTION_COLUMN_UPDATED_AT = "updated_at";
 export const QUESTION_COLUMN_CELEBRITY_FIRST_NAME = "celebrity_first_name";
 export const QUESTION_COLUMN_CELEBRITY_LAST_NAME = "celebrity_last_name";
+export const QUESTION_COLUMN_CELEBRITY_GENDER = "celebrity_gender";
 export const QUESTION_COLUMN_REAL_VIDEO_ID = "real_video_id";
 export const QUESTION_COLUMN_FAKE_VIDEO_ID = "fake_video_id";
 export const QUESTION_COLUMN_REAL_DATASET_ID = "real_dataset_id";
