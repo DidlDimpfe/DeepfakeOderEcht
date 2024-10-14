@@ -1,12 +1,11 @@
 import logo from "@/../public/logo.png";
 import Image from "next/image";
-import Link from "next/link";
 import Heading from "./Heading";
 
 export default function Header() {
   return (
     <header className="flex h-16 items-center justify-center border-b-[1px] border-b-accent-700 bg-primary-850 px-4">
-      <Link
+      <a
         className="flex cursor-pointer items-center justify-center gap-4 rounded"
         href="/"
       >
@@ -18,7 +17,7 @@ export default function Header() {
         <Heading as="h1" size="sm">
           Deepfake Oder Echt?
         </Heading>
-      </Link>
+      </a>
     </header>
   );
 }

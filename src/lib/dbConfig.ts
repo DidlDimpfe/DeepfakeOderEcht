@@ -15,3 +15,4 @@ export const GUESS_COLUMN_CREATED_AT = "created_at";
 export const GUESS_COLUMN_UPDATED_AT = "updated_at";
 export const GUESS_COLUMN_IS_CORRECT = "is_correct";
 export const GUESS_COLUMN_QUESTION_ID = "question_id";
+// TODO ip address to fight against suspicious behavior

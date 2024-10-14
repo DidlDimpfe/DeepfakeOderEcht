@@ -2,6 +2,8 @@ import QuestionPick from "@/components/Questions";
 import { getQuestion } from "@/lib/queries";
 import { notFound } from "next/navigation";
 
+// TODO generate static params
+
 export default async function Page({
   params: { questionId },
 }: {
