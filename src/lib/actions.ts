@@ -11,6 +11,7 @@ export async function addGuess(
   // TODO implement
   const ip = headers().get("x-forwarded-for");
   console.log(ip);
+  console.log(userToken);
 
   console.log(await isGuessCorrect(questionId, guessedVideoId));
 }

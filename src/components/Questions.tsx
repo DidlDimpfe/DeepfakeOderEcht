@@ -21,7 +21,7 @@ export default function QuestionPick({
   return (
     <>
       <div
-        className="flex items-center justify-center"
+        className="flex cursor-pointer items-center justify-center"
         onClick={() => handleClick(firstVideoId)}
       >
         <Video
@@ -31,7 +31,7 @@ export default function QuestionPick({
       </div>
 
       <div
-        className="flex items-center justify-center"
+        className="flex cursor-pointer items-center justify-center"
         onClick={() => handleClick(secondVideoId)}
       >
         <Video

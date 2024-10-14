@@ -36,7 +36,7 @@ export default async function Page({
       </div>
 
       {/* TODO responsive */}
-      <div className="absolute left-1/2 top-4 z-10 -translate-x-1/2 rounded-full border border-accent-300 bg-primary-500 px-3 py-1 text-center text-sm font-semibold uppercase">
+      <div className="absolute left-1/2 top-4 z-10 -translate-x-1/2 cursor-default rounded-full border border-accent-300 bg-primary-500 px-3 py-1 text-center text-sm font-semibold uppercase">
         <span>
           Wähle {question.celebrity_gender === "f" ? "die" : "den"} echte
           {question.celebrity_gender === "f" ? "" : "n"}{" "}
