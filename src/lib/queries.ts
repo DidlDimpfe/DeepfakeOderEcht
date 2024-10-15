@@ -43,7 +43,7 @@ export async function getRandomQuestionId() {
   }
 }
 
-interface Question
+export interface Question
   extends Omit<DatabaseQuestionTable, "fake_dataset_id" | "real_dataset_id"> {}
 
 export async function getQuestion(questionId: string) {

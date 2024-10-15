@@ -1,17 +1,13 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use server";
 
 import { headers } from "next/headers";
-import { isGuessCorrect } from "./queries";
 
 export async function addGuess(
   questionId: string,
-  guessedVideoId: string,
-  userToken: string,
+  _guessedVideoId: string,
+  serToken: string,
 ) {
   // TODO implement
   const ip = headers().get("x-forwarded-for");
-  console.log(ip);
-  console.log(userToken);
-
-  console.log(await isGuessCorrect(questionId, guessedVideoId));
 }

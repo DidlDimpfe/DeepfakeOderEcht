@@ -16,7 +16,7 @@ export default function Heading({
   const sizeStyles = {
     lg: "text-5xl font-semibold tracking-tight xl:text-7xl",
     md: "text-3xl font-semibold tracking-tight xl:text-5xl",
-    sm: "text-xl font-semibold xl:text-3xl",
+    sm: "text-xl font-semibold",
     xs: "text-lg font-semibold xl:text-xl",
   };
 

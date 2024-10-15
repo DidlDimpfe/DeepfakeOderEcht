@@ -27,8 +27,8 @@ export default function Button({
     primary:
       "bg-primary-500 text-white hover:bg-primary-600 focus:ring-primary-200",
     secondary:
-      "bg-primary-50 text-primary-500 hover:bg-accent-100 focus:ring-primary-500 dark:bg-primary-850 dark:hover:bg-primary-800",
-    link: "hover:text-primary-600 dark:hover:text-primary-300 text-primary-500",
+      " bg-primary-850 text-primary-500 hover:bg-primary-800 focus:ring-primary-500",
+    link: "hover:text-primary-300 text-primary-500",
     none: "",
   };
 

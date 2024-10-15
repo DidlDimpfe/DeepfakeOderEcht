@@ -1,6 +1,7 @@
 import mysql from "mysql2/promise";
 import {
   GUESS_COLUMN_CREATED_AT,
+  GUESS_COLUMN_IP_ADDRESS,
   GUESS_COLUMN_IS_CORRECT,
   GUESS_COLUMN_QUESTION_ID,
   GUESS_COLUMN_UPDATED_AT,
@@ -60,6 +61,7 @@ export interface DatabaseQuestionTable {
 
 export interface DatabaseGuessTable {
   [GUESS_COLUMN_USER_TOKEN]: string;
+  [GUESS_COLUMN_IP_ADDRESS]: string;
   [GUESS_COLUMN_CREATED_AT]: Date;
   [GUESS_COLUMN_UPDATED_AT]: Date;
   [GUESS_COLUMN_IS_CORRECT]: boolean;
