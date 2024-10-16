@@ -22,11 +22,7 @@ export default function CelebrityQuestionsView({
 
       <ul className="divide-primary-875 space-y-1 divide-y-2">
         {questions.map((question) => (
-          <QuestionView
-            question={question}
-            celebrity={celebrity}
-            key={question.id}
-          />
+          <QuestionView question={question} key={question.id} />
         ))}
       </ul>
     </li>

@@ -1,15 +1,9 @@
-import { Celebrity, Question } from "@/lib/queries";
+import { Question } from "@/lib/queries";
 import { NoSymbolIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import CelebrityPicture from "./CelebrityPicture";
 
-export default function QuestionView({
-  question,
-  celebrity,
-}: {
-  question: Question;
-  celebrity: Celebrity;
-}) {
+export default function QuestionView({ question }: { question: Question }) {
   // TODO responsive and additional info on bigger screens
 
   return (
