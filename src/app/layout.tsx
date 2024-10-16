@@ -12,7 +12,7 @@ import "@/styles/globals.css";
 
 export const metadata = {
   title: {
-    template: "Deepfake Oder Echt?",
+    template: "%s | Deepfake Oder Echt?",
     default: "Deepfake Oder Echt?",
   },
   description:

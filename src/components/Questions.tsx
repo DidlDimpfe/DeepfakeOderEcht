@@ -23,7 +23,7 @@ export default function QuestionPick({
       <div className="flex items-center justify-center">
         <Video
           videoId={firstVideoId}
-          className="mx-[4%] mt-12 cursor-pointer transition-transform duration-300 hover:scale-105 hover:shadow-2xl lg:mx-[8%] lg:my-0"
+          className="mx-[4%] mt-12 cursor-pointer transition-transform duration-300 lg:mx-[8%] lg:my-0"
           onClick={() => handleClick(firstVideoId)}
         />
       </div>
@@ -31,7 +31,7 @@ export default function QuestionPick({
       <div className="flex items-center justify-center">
         <Video
           videoId={secondVideoId}
-          className="mx-[4%] mb-12 cursor-pointer transition-transform duration-300 hover:scale-105 hover:shadow-2xl lg:mx-[8%] lg:my-0"
+          className="mx-[4%] mb-12 cursor-pointer transition-transform duration-300 lg:mx-[8%] lg:my-0"
           onClick={() => handleClick(secondVideoId)}
         />
       </div>

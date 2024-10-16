@@ -1,6 +1,12 @@
 import Button from "@/components/Button";
 import Heading from "@/components/Heading";
 import { FaceFrownIcon } from "@heroicons/react/24/solid";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Frage nicht gefunden",
+  description: "Diese Frage konnte nicht gefunden werden",
+};
 
 export default function NotFound() {
   return (

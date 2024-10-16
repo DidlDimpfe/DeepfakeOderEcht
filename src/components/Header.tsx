@@ -1,12 +1,13 @@
 import logo from "@/../public/logo.png";
 import Image from "next/image";
 import Heading from "./Heading";
+import OverviewButton from "./OverviewButton";
 
 export default function Header() {
   return (
-    <header className="flex h-16 items-center justify-center border-b-[1px] border-b-accent-700 bg-primary-850 px-4">
+    <header className="flex h-16 items-center justify-between border-b-[1px] border-b-accent-700 bg-primary-850 px-4">
       <a
-        className="flex cursor-pointer items-center justify-center gap-4 rounded"
+        className="flex cursor-pointer items-center justify-center gap-2 rounded"
         href="/"
       >
         <span
@@ -18,6 +19,7 @@ export default function Header() {
           Deepfake Oder Echt?
         </Heading>
       </a>
+      <OverviewButton />
     </header>
   );
 }

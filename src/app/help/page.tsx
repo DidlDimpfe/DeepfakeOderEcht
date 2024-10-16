@@ -11,9 +11,15 @@ import {
   FolderIcon,
 } from "@heroicons/react/24/outline";
 
+export const metadata = {
+  title: "Hilfe",
+  description:
+    "Erfahre mehr über Deepfakes, wie das Spiel funktioniert und weitere interessante Informationen.",
+};
+
 export default function HelpPage() {
   return (
-    <main className="container relative mx-auto px-4 pt-4">
+    <main className="container relative mx-auto mb-4 px-4 pt-4">
       <div className="relative flex items-center">
         <BackButton />
 

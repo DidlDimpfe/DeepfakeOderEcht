@@ -2,8 +2,27 @@ import Divider from "@/components/Divider";
 import HelpButton from "@/components/HelpButton";
 import Questions from "@/components/Questions";
 import ToDoLabel from "@/components/ToDoLabel";
-import { getQuestion } from "@/lib/queries";
+import { getCelebrity, getQuestion } from "@/lib/queries";
+import { Metadata } from "next";
 import { notFound } from "next/navigation";
+
+export async function generateMetadata({
+  params: { questionId },
+}: {
+  params: { questionId: string };
+}): Promise<Metadata> {
+  const question = await getQuestion(questionId);
+
+  if (!question) {
+    notFound();
+  }
+
+  const celebrity = await getCelebrity(question.celebrity_id);
+
+  return {
+    title: `${celebrity.first_name} ${celebrity.last_name}`,
+  };
+}
 
 // TODO generate static params
 
@@ -17,6 +36,8 @@ export default async function Page({
   if (!question) {
     notFound();
   }
+
+  const celebrity = await getCelebrity(question.celebrity_id);
 
   const [firstVideoId, secondVideoId] =
     Math.random() < 0.5
@@ -33,7 +54,7 @@ export default async function Page({
 
       <Divider />
 
-      <ToDoLabel question={question} />
+      <ToDoLabel celebrity={celebrity} />
 
       <HelpButton />
     </main>

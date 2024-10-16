@@ -9,27 +9,22 @@ CREATE TABLE `question` (
   `id` varchar(36) NOT NULL DEFAULT (uuid()),
   `created_at` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
   `updated_at` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-  `celebrity_first_name` varchar(20) NOT NULL,
-  `celebrity_last_name` varchar(20) NOT NULL,
   `real_video_id` varchar(11) NOT NULL,
   `fake_video_id` varchar(11) NOT NULL,
   `real_dataset_id` varchar(10) NOT NULL,
   `fake_dataset_id` varchar(18) NOT NULL,
-  PRIMARY KEY (`id`)
+  `celebrity_id` varchar(36) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_celebrity_question` (`celebrity_id`),
+  CONSTRAINT `fk_celebrity_question` FOREIGN KEY (`celebrity_id`) REFERENCES `celebrity` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
-INSERT INTO question (id, celebrity_first_name, celebrity_last_name, real_video_id, fake_video_id, real_dataset_id, fake_dataset_id, celebrity_gender) VALUES ("190c9ffd-4125-46d4-b7de-29cc8790e3da", "Aamir", "Khan", "buQj3dG5Yk8", "gOabuXIPraU", "id0_0002", "id0_id1_0002", "m");
-INSERT INTO question (id, celebrity_first_name, celebrity_last_name, real_video_id, fake_video_id, real_dataset_id, fake_dataset_id, celebrity_gender) VALUES ("3ef71cd6-a56c-40c6-82bf-b32dbb9a8493", "Will", "Smith", "9HBpx3Qbyrs", "Db-YCkWsRBk", "id5_0003", "id5_id60_0003", "m");
-INSERT INTO question (id, celebrity_first_name, celebrity_last_name, real_video_id, fake_video_id, real_dataset_id, fake_dataset_id, celebrity_gender) VALUES ("2e0bb9b8-75a5-47e5-8d17-f552fb079911", "Ryan", "Reynolds", "kEZKMAfbook", "x9BQpjW3nSU", "id3_0007", "id3_id17_0007", "m");
-INSERT INTO question (id, celebrity_first_name, celebrity_last_name, real_video_id, fake_video_id, real_dataset_id, fake_dataset_id, celebrity_gender) VALUES ("633e60e1-8fac-4c71-8e35-38c067158457", "Leonardo", "DiCaprio", "gS9Odil-NJo", "TMMs1a5fsiA", "id19_0008", "id19_id28_0008", "m");
-INSERT INTO question (id, celebrity_first_name, celebrity_last_name, real_video_id, fake_video_id, real_dataset_id, fake_dataset_id, celebrity_gender) VALUES ("7d0dd0ea-c83a-4079-8185-66386f3a508c", "Chris", "Hemsworth", "IB0W-Y-IGvE", "FspscTF12Ug", "id17_0006", "id17_id16_0006", "m");
-INSERT INTO question (id, celebrity_first_name, celebrity_last_name, real_video_id, fake_video_id, real_dataset_id, fake_dataset_id, celebrity_gender) VALUES ("ab9ab6bd-f939-4d5a-a596-26d33bc33833", "Emma", "Watson", "DG-DdVleJ-Y", "GP_bD7oggdw", "id11_0009", "id11_id7_0009", "f");
-INSERT INTO question (id, celebrity_first_name, celebrity_last_name, real_video_id, fake_video_id, real_dataset_id, fake_dataset_id, celebrity_gender) VALUES ("07ebdc2f-a043-4345-af8c-164b8a834ecd", "Scarlett", "Johansson", "WN1gBuoG6xs", "coNzORjXCfQ", "id7_0001", "id7_id13_0001", "f");
-INSERT INTO question (id, celebrity_first_name, celebrity_last_name, real_video_id, fake_video_id, real_dataset_id, fake_dataset_id, celebrity_gender) VALUES ("cfbe1303-e7be-48e8-9062-99d1a4e264a7", "Chris", "Evans", "7heyqL3YtUU", "POyUz-oALNc", "id4_0009", "id4_id21_0009", "m");
-INSERT INTO question (id, celebrity_first_name, celebrity_last_name, real_video_id, fake_video_id, real_dataset_id, fake_dataset_id, celebrity_gender) VALUES ("2c884e75-c508-4fb3-95d2-e3f276eedd93", "Aamir", "Khan", "8XZjkw_yanA", "aQFz0xQukX4", "id0_0000", "id0_id1_0000", "m");
-INSERT INTO question (id, celebrity_first_name, celebrity_last_name, real_video_id, fake_video_id, real_dataset_id, fake_dataset_id, celebrity_gender) VALUES ("5d7c8e2e-a669-4fe2-9db5-bb291aed479a", "Evangeline", "Lilly", "ZBaM7_rHJ0c", "22IBIfHHDmw", "id53_0002", "id53_id52_0002", "f");
-INSERT INTO question (id, celebrity_first_name, celebrity_last_name, real_video_id, fake_video_id, real_dataset_id, fake_dataset_id, celebrity_gender) VALUES ("50883fac-c0d5-497c-bfe9-8d7c99fb9345", "Don", "Cheadle", "VaJ65X2QZnw", "yaoR1G_p4ho", "id61_0009", "id61_id60_0009", "m");
-INSERT INTO question (id, celebrity_first_name, celebrity_last_name, real_video_id, fake_video_id, real_dataset_id, fake_dataset_id, celebrity_gender) VALUES ("0c6c7ef1-234b-4beb-b88d-565c16339b6f", "Liam", "Neeson", "DD_mwGbCmps", "8M6-cBlXASo", "id37_0005", "id37_id20_0005", "m");
-INSERT INTO question (id, celebrity_first_name, celebrity_last_name, real_video_id, fake_video_id, real_dataset_id, fake_dataset_id, celebrity_gender) VALUES ("fb620a4c-9c47-409a-8860-cb193de1d888", "Jennifer", "Aniston", "G2-OQ28MC5A", "rdzO56SP2LA", "id39_0004", "id39_id47_0004", "f");
-INSERT INTO question (id, celebrity_first_name, celebrity_last_name, real_video_id, fake_video_id, real_dataset_id, fake_dataset_id, celebrity_gender) VALUES ("cd3e2f7d-a96f-4447-b026-7e65abf76af7", "Will", "Ferrell", "zhuLcLvZoIA", "v7MqsQbI0Lc", "id6_0004", "id6_id37_0004", "m");
-INSERT INTO question (id, celebrity_first_name, celebrity_last_name, real_video_id, fake_video_id, real_dataset_id, fake_dataset_id, celebrity_gender) VALUES ("bff97c7a-6089-4c48-9014-325cadaddc94", "Russell", "Crowe", "2JxNbVzL3QE", "OiY_FXEWwDI", "id32_0007", "id32_id37_0007", "m");
+CREATE TABLE `celebrity` (
+  `id` varchar(36) NOT NULL DEFAULT (uuid()),
+  `created_at` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `updated_at` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
+  `first_name` varchar(20) NOT NULL,
+  `last_name` varchar(20) NOT NULL,
+  `gender` enum('m','f') NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
