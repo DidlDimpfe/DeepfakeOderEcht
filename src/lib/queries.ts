@@ -46,8 +46,6 @@ export async function getRandomQuestionId(userToken: string) {
       [userToken],
     );
 
-    console.log(result?.id);
-
     return result?.id || null;
   } catch (error: unknown) {
     if (error instanceof Error) {

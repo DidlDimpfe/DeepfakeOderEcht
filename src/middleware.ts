@@ -5,10 +5,10 @@ import { NextResponse } from "next/server";
 export function middleware(req: NextRequest) {
   const userTokenCookie = req.cookies.get("userToken");
 
+  const response = NextResponse.next();
+
   if (!userTokenCookie) {
     const newUserToken = generateUUID();
-
-    const response = NextResponse.next();
 
     response.cookies.set({
       name: "userToken",
@@ -17,11 +17,9 @@ export function middleware(req: NextRequest) {
       path: "/",
       maxAge: 60 * 60 * 24 * 365 * 10,
     });
-
-    return response;
   }
 
-  return NextResponse.next();
+  return response;
 }
 
 export const config = {

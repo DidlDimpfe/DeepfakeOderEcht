@@ -34,7 +34,7 @@ CREATE TABLE `guess` (
   `updated_at` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
   `user_token` varchar(36) NOT NULL,
   `ip_address` varchar(40) NOT NULL,
-  `is_correct` tinyint(1) NOT NULL,
+  `is_correct` tinyint NOT NULL,
   `question_id` varchar(36) NOT NULL,
   PRIMARY KEY (`user_token`,`question_id`),
   KEY `fk_guess_question` (`question_id`),

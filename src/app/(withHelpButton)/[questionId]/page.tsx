@@ -2,6 +2,7 @@ import Button from "@/components/Button";
 import CelebrityPicture from "@/components/CelebrityPicture";
 import Divider from "@/components/Divider";
 import HelpButton from "@/components/HelpButton";
+import NextQuestionButton from "@/components/NextQuestionButton";
 import Questions from "@/components/Questions";
 import ToDoLabel from "@/components/ToDoLabel";
 import {
@@ -88,9 +89,7 @@ export default async function Page({
           <Button type="secondary" size="lg" href={`/inspect/${questionId}`}>
             Untersuchen
           </Button>
-          <Button type="primary" size="lg" href="/" a>
-            Nächste Frage
-          </Button>
+          <NextQuestionButton />
         </div>
       </main>
     );
