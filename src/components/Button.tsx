@@ -9,6 +9,7 @@ interface ButtonProps {
   size?: "lg" | "md" | "sm" | "xs" | "none";
   onClick?: () => void;
   className?: string;
+  a?: boolean;
 }
 
 export default function Button({
@@ -19,6 +20,7 @@ export default function Button({
   size = "md",
   onClick,
   className,
+  a = false,
 }: ButtonProps) {
   const baseStyles =
     "inline-flex items-center justify-center font-medium focus:outline-none";
@@ -45,6 +47,18 @@ export default function Button({
   const combinedStyles = `${baseStyles} ${typeStyles[type]} ${sizeStyles[size]} ${disabledStyles} ${className}`;
 
   if (href) {
+    if (a) {
+      return (
+        <a
+          href={href}
+          className={combinedStyles}
+          onClick={disabled ? undefined : onClick}
+        >
+          {children}
+        </a>
+      );
+    }
+
     return (
       <Link
         href={href}

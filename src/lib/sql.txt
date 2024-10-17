@@ -29,6 +29,18 @@ CREATE TABLE `question` (
   CONSTRAINT `fk_celebrity_question` FOREIGN KEY (`celebrity_id`) REFERENCES `celebrity` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
+CREATE TABLE `guess` (
+  `created_at` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
+  `updated_at` datetime(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
+  `user_token` varchar(36) NOT NULL,
+  `ip_address` varchar(40) NOT NULL,
+  `is_correct` tinyint(1) NOT NULL,
+  `question_id` varchar(36) NOT NULL,
+  PRIMARY KEY (`user_token`,`question_id`),
+  KEY `fk_guess_question` (`question_id`),
+  CONSTRAINT `fk_guess_question` FOREIGN KEY (`question_id`) REFERENCES `question` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
 INSERT INTO `celebrity` (`id`, `first_name`, `last_name`, `gender`) VALUES 
 ('df40dde2-7d6b-4232-b029-87d5eb163f0e','Scarlett','Johansson','f'),
 ('d7176bf6-2c6a-453a-91de-f658879da1ff','Liam','Neeson','m'),

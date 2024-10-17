@@ -6,7 +6,7 @@ export default function HelpButton() {
     <Button
       size="xs"
       type="secondary"
-      className="absolute bottom-2 right-2 z-[51]"
+      className="fixed bottom-2 right-2 z-[51]"
       href="/help"
     >
       <QuestionMarkCircleIcon

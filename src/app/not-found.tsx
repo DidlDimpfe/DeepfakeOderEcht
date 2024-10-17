@@ -17,7 +17,7 @@ export default function NotFound() {
           Diese Frage konnte nicht gefunden werden
         </Heading>
         <Button type="primary" size="lg" href="/">
-          Zum Quiz
+          Andere Frage
         </Button>
       </div>
     </main>

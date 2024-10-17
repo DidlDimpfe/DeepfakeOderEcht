@@ -8,7 +8,9 @@ const roboto = Roboto({
 });
 
 import Header from "@/components/Header";
+import Spinner from "@/components/Spinner";
 import "@/styles/globals.css";
+import { Suspense } from "react";
 
 export const metadata = {
   title: {
@@ -31,7 +33,7 @@ export default function RootLayout({
       >
         <Header />
 
-        {children}
+        <Suspense fallback={<Spinner />}>{children}</Suspense>
       </body>
     </html>
   );

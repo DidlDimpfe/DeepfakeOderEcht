@@ -1,6 +1,7 @@
 import { FieldPacket } from "mysql2";
 import {
   DatabaseCelebrityTable,
+  DatabaseGuessTable,
   DatabaseQuestionTable,
   queryDatabase,
 } from "./db";
@@ -12,6 +13,12 @@ import {
   CELEBRITY_COLUMN_LAST_NAME,
   CELEBRITY_COLUMN_UPDATED_AT,
   CELEBRITY_TABLE_NAME,
+  GUESS_COLUMN_CREATED_AT,
+  GUESS_COLUMN_IS_CORRECT,
+  GUESS_COLUMN_QUESTION_ID,
+  GUESS_COLUMN_UPDATED_AT,
+  GUESS_COLUMN_USER_TOKEN,
+  GUESS_TABLE_NAME,
   QUESTION_COLUMN_CELEBRITY_ID,
   QUESTION_COLUMN_CREATED_AT,
   QUESTION_COLUMN_FAKE_VIDEO_ID,
@@ -28,17 +35,20 @@ class QueryError extends Error {
   }
 }
 
-export async function getRandomQuestionId() {
+export async function getRandomQuestionId(userToken: string) {
   interface QueryResult {
     id: string;
   }
-  // TODO: only not already answered questions
+
   try {
     const [[result]]: [QueryResult[], FieldPacket[]] = await queryDatabase(
-      `SELECT ${QUESTION_COLUMN_ID} FROM ${QUESTION_TABLE_NAME} ORDER BY RAND() LIMIT 1`,
+      `SELECT q.${QUESTION_COLUMN_ID} FROM ${QUESTION_TABLE_NAME} q LEFT JOIN ${GUESS_TABLE_NAME} g ON q.${QUESTION_COLUMN_ID} = g.${GUESS_COLUMN_QUESTION_ID} AND g.${GUESS_COLUMN_USER_TOKEN} = ? WHERE g.${GUESS_COLUMN_QUESTION_ID} IS NULL ORDER BY RAND() LIMIT 1`,
+      [userToken],
     );
 
-    return result.id || null;
+    console.log(result?.id);
+
+    return result?.id || null;
   } catch (error: unknown) {
     if (error instanceof Error) {
       throw new QueryError(
@@ -51,6 +61,28 @@ export async function getRandomQuestionId() {
     }
   }
 }
+
+export async function getFailPercentage(questionId: string) {
+  interface QueryResult {
+    failPercentage: number;
+  }
+
+  try {
+    const [[result]]: [QueryResult[], FieldPacket[]] = await queryDatabase(
+      `SELECT (SUM(CASE WHEN ${GUESS_COLUMN_IS_CORRECT} = 0 THEN 1 ELSE 0 END) / COUNT(*)) * 100 AS failPercentage FROM ${GUESS_TABLE_NAME} WHERE ${GUESS_COLUMN_QUESTION_ID} = ?`,
+      [questionId],
+    );
+
+    return result?.failPercentage ? Number(result?.failPercentage) : null;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new QueryError(`Failed to fetch fail percentage: ${error.message}`);
+    } else {
+      throw new QueryError(`Failed to fetch fail percentage: ${String(error)}`);
+    }
+  }
+}
+
 export interface Question
   extends Omit<DatabaseQuestionTable, "real_dataset_id" | "fake_dataset_id"> {}
 
@@ -143,6 +175,54 @@ export async function getQuestions(celebrityId: string) {
       throw new QueryError(`Failed to fetch questions: ${error.message}`);
     } else {
       throw new QueryError(`Failed to fetch questions: ${String(error)}`);
+    }
+  }
+}
+
+export async function insertGuess(
+  userToken: string,
+  ipAddress: string,
+  isCorrect: boolean,
+  questionId: string,
+) {
+  try {
+    await queryDatabase(
+      `INSERT INTO guess (user_token, ip_address, is_correct, question_id) VALUES (?, ?, ?, ?)`,
+      [userToken, ipAddress, isCorrect, questionId],
+    );
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new QueryError(`Failed to insert guess: ${error.message}`);
+    } else {
+      throw new QueryError(`Failed to insert guess: ${String(error)}`);
+    }
+  }
+}
+
+export interface Guess
+  extends Omit<DatabaseGuessTable, "ip_address" | "question_id"> {}
+
+export async function getGuess(userToken: string, questionId: string) {
+  try {
+    const [[guess]]: [Guess[], FieldPacket[]] = await queryDatabase(
+      `SELECT ${GUESS_COLUMN_USER_TOKEN}, ${GUESS_COLUMN_CREATED_AT}, ${GUESS_COLUMN_UPDATED_AT}, ${GUESS_COLUMN_IS_CORRECT}  FROM ${GUESS_TABLE_NAME} WHERE ${GUESS_COLUMN_USER_TOKEN} = ? AND ${GUESS_COLUMN_QUESTION_ID} = ?`,
+      [userToken, questionId],
+    );
+
+    if (guess) {
+      guess.is_correct = Boolean(guess.is_correct);
+    }
+
+    return guess || null;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new QueryError(
+        `Failed to check if question was already answered: ${error.message}`,
+      );
+    } else {
+      throw new QueryError(
+        `Failed to check if question was already answered: ${String(error)}`,
+      );
     }
   }
 }

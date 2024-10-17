@@ -1,6 +1,6 @@
 "use client";
 
-import { addGuess } from "@/lib/actions";
+import { guess } from "@/lib/actions";
 import Video from "./Video";
 
 interface QuestionPickProps {
@@ -15,7 +15,7 @@ export default function QuestionPick({
   questionId,
 }: QuestionPickProps) {
   function handleClick(videoId: string) {
-    addGuess(questionId, videoId, "temp");
+    guess(questionId, videoId);
   }
 
   return (
