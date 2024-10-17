@@ -32,5 +32,9 @@ export async function redirectToNewQuestion() {
     throw new Error("User token not found");
   }
 
-  redirect("/" + (await getRandomQuestionId(userToken)));
+  const questionId = await getRandomQuestionId(userToken);
+
+  if (questionId === null) return redirect("/allanswered");
+
+  return redirect(`/${questionId}`);
 }
