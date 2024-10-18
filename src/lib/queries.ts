@@ -224,3 +224,32 @@ export async function getGuess(userToken: string, questionId: string) {
     }
   }
 }
+
+export async function hasIPExceededLimit(
+  ipAddress: string,
+  limit: number,
+  questionId: string,
+) {
+  interface QueryResult {
+    hasExceededLimit: boolean;
+  }
+
+  try {
+    const [[result]]: [QueryResult[], FieldPacket[]] = await queryDatabase(
+      `SELECT CASE WHEN COUNT(*) >= ? THEN 1 ELSE 0 END AS hasExceededLimit FROM ${GUESS_TABLE_NAME} WHERE ip_address = ? AND question_id = ? AND created_at >= NOW() - INTERVAL 1 DAY`,
+      [limit, ipAddress, questionId],
+    );
+
+    return Boolean(result.hasExceededLimit);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new QueryError(
+        `Failed to check if IP has exceeded limit: ${error.message}`,
+      );
+    } else {
+      throw new QueryError(
+        `Failed to check if IP has exceeded limit: ${String(error)}`,
+      );
+    }
+  }
+}

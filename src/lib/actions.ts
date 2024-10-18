@@ -3,7 +3,14 @@
 import { revalidatePath } from "next/cache";
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { getRandomQuestionId, insertGuess, isGuessCorrect } from "./queries";
+import { MAXIMUM_GUESSES_PER_QUESTION_PER_IP_PER_DAY } from "./config";
+import {
+  getGuess,
+  getRandomQuestionId,
+  hasIPExceededLimit,
+  insertGuess,
+  isGuessCorrect,
+} from "./queries";
 
 export async function guess(questionId: string, guessedVideoId: string) {
   const userToken = cookies().get("userToken")?.value;
@@ -16,6 +23,23 @@ export async function guess(questionId: string, guessedVideoId: string) {
 
   if (!ip) {
     throw new Error("IP address not found");
+  }
+
+  // Not needed beacause userToken and questionId are primary keys (I will let it stay for now)
+  if ((await getGuess(userToken, questionId)) !== null) {
+    throw new Error("Question already answered");
+  }
+
+  if (
+    await hasIPExceededLimit(
+      ip,
+      MAXIMUM_GUESSES_PER_QUESTION_PER_IP_PER_DAY,
+      questionId,
+    )
+  ) {
+    throw new Error(
+      "IP address has exceeded the limit of guesses for today for this question",
+    );
   }
 
   const isCorrect = await isGuessCorrect(questionId, guessedVideoId);
