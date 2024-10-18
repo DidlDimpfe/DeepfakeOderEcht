@@ -37,9 +37,7 @@ export async function guess(questionId: string, guessedVideoId: string) {
       questionId,
     )
   ) {
-    throw new Error(
-      "IP address has exceeded the limit of guesses for today for this question",
-    );
+    return redirect("/limitexceeded");
   }
 
   const isCorrect = await isGuessCorrect(questionId, guessedVideoId);
