@@ -15,7 +15,6 @@ export const GUESS_COLUMN_USER_TOKEN = "user_token";
 export const GUESS_COLUMN_IP_ADDRESS = "ip_address";
 export const GUESS_COLUMN_IS_CORRECT = "is_correct";
 export const GUESS_COLUMN_QUESTION_ID = "question_id";
-// 2003:e0:ef20:3100:c1f9:1edf:6617:aa74 TODO ::ffff:192.168.178.22
 
 export const CELEBRITY_TABLE_NAME = "celebrity";
 export const CELEBRITY_COLUMN_ID = "id";

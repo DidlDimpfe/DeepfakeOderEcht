@@ -3,13 +3,14 @@ import CelebrityPicture from "@/components/CelebrityPicture";
 import Divider from "@/components/Divider";
 import HelpButton from "@/components/HelpButton";
 import NextQuestionButton from "@/components/NextQuestionButton";
+import PageHeading from "@/components/PageHeading";
 import Questions from "@/components/Questions";
-import ToDoLabel from "@/components/ToDoLabel";
 import {
   getCelebrity,
   getFailPercentage,
   getGuess,
   getQuestion,
+  getQuestionIDs,
 } from "@/lib/queries";
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/outline";
 import { Metadata } from "next";
@@ -34,7 +35,9 @@ export async function generateMetadata({
   };
 }
 
-// TODO generate static params
+export async function generateStaticParams() {
+  return await getQuestionIDs();
+}
 
 export default async function Page({
   params: { questionId },
@@ -110,7 +113,13 @@ export default async function Page({
 
       <Divider />
 
-      <ToDoLabel celebrity={celebrity} />
+      <PageHeading className="absolute left-1/2 top-4 z-10 -translate-x-1/2 md:top-6 lg:top-10">
+        <h2>
+          Wähle {celebrity.gender === "f" ? "die" : "den"} echte
+          {celebrity.gender === "f" ? "" : "n"} {celebrity.first_name}{" "}
+          {celebrity.last_name}
+        </h2>
+      </PageHeading>
 
       <HelpButton />
     </main>

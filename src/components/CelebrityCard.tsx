@@ -1,4 +1,4 @@
-import { Celebrity, getQuestions } from "@/lib/queries";
+import { Celebrity, getQuestionsByCelebrity } from "@/lib/queries";
 
 import CelebrityQuestionsView from "./CelebrityQuestionsView";
 
@@ -7,7 +7,7 @@ export default async function CelebrityCard({
 }: {
   celebrity: Celebrity;
 }) {
-  const questions = await getQuestions(celebrity.id);
+  const questions = await getQuestionsByCelebrity(celebrity.id);
 
   if (questions.length === 0) {
     return null;

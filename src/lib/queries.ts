@@ -160,7 +160,27 @@ export async function getCelebrities() {
   }
 }
 
-export async function getQuestions(celebrityId: string) {
+export async function getQuestionIDs() {
+  try {
+    interface QueryResult {
+      questionId: string;
+    }
+
+    const [ids]: [QueryResult[], FieldPacket[]] = await queryDatabase(
+      `SELECT ${QUESTION_COLUMN_ID} as questionId FROM ${QUESTION_TABLE_NAME}`,
+    );
+
+    return ids;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new QueryError(`Failed to fetch question ids: ${error.message}`);
+    } else {
+      throw new QueryError(`Failed to fetch question ids: ${String(error)}`);
+    }
+  }
+}
+
+export async function getQuestionsByCelebrity(celebrityId: string) {
   try {
     const [questions]: [Question[], FieldPacket[]] = await queryDatabase(
       `SELECT ${QUESTION_COLUMN_ID}, ${QUESTION_COLUMN_CREATED_AT}, ${QUESTION_COLUMN_UPDATED_AT}, ${QUESTION_COLUMN_REAL_VIDEO_ID}, ${QUESTION_COLUMN_FAKE_VIDEO_ID}, ${QUESTION_COLUMN_CELEBRITY_ID} FROM ${QUESTION_TABLE_NAME} WHERE ${QUESTION_COLUMN_CELEBRITY_ID} = ? ORDER BY ${QUESTION_COLUMN_UPDATED_AT} DESC`,
