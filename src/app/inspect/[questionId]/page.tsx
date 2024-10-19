@@ -27,6 +27,7 @@ export async function generateMetadata({
 
   return {
     title: `Untersuchen: ${celebrity.first_name} ${celebrity.last_name}`,
+    description: `Untersuche die Videos von ${celebrity.first_name} ${celebrity.last_name} und lerne, wie du die Unterschiede erkennen kannst.`,
   };
 }
 

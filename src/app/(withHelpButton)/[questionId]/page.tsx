@@ -32,6 +32,7 @@ export async function generateMetadata({
 
   return {
     title: `${celebrity.first_name} ${celebrity.last_name}`,
+    description: `Kannst du ${celebrity.gender === "f" ? "die" : "den"} echte${celebrity.gender === "f" ? "" : "n"} ${celebrity.first_name} ${celebrity.last_name} erkennen?`,
   };
 }
 

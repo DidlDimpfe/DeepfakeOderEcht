@@ -55,11 +55,13 @@ INSERT INTO `celebrity` (`id`, `first_name`, `last_name`, `gender`) VALUES
 ('2119ddc2-a034-458f-9e03-458cf11983f9','Russell','Crowe','m'),
 ('af9b3384-11bd-4678-b530-c8d9ea0819e7','Will','Ferrell','m'),
 ('496ff28f-34b6-4164-965d-3e1bf8d43532','Chris','Evans','m'),
-('8f46078f-b31b-4f15-9c50-cfcc4f5d7af1','Jennifer','Aniston','f');
+('8f46078f-b31b-4f15-9c50-cfcc4f5d7af1','Jennifer','Aniston','f'),
+('001f7567-1a17-4cfa-8388-84d29d6ac6d1','Angelina','Jolie','f'),
+('8f1b59f0-baf7-42c3-947d-e58c49038816','Jessica','Alba','f');
 
 
 INSERT INTO `question` (`id`, `real_video_id`, `fake_video_id`, `real_dataset_id`, `fake_dataset_id`, `celebrity_id`) VALUES 
-('07ebdc2f-a043-4345-af8c-164b8a834ecd','WN1gBuoG6xs','coNzORjXCfQ','id7_0000','id7_id13_0001','df40dde2-7d6b-4232-b029-87d5eb163f0e'),
+('07ebdc2f-a043-4345-af8c-164b8a834ecd','WN1gBuoG6xs','coNzORjXCfQ','id7_0001','id7_id13_0001','df40dde2-7d6b-4232-b029-87d5eb163f0e'),
 ('0c6c7ef1-234b-4beb-b88d-565c16339b6f','DD_mwGbCmps','8M6-cBlXASo','id37_0005','id37_id20_0005','d7176bf6-2c6a-453a-91de-f658879da1ff'),
 ('190c9ffd-4125-46d4-b7de-29cc8790e3da','buQj3dG5Yk8','gOabuXIPraU','id0_0002','id0_id1_0002','9e9f3a9c-e174-4d72-8cfd-b93c2350a015'),
 ('2c884e75-c508-4fb3-95d2-e3f276eedd93','8XZjkw_yanA','aQFz0xQukX4','id0_0000','id0_id1_0000','9e9f3a9c-e174-4d72-8cfd-b93c2350a015'),
@@ -74,4 +76,8 @@ INSERT INTO `question` (`id`, `real_video_id`, `fake_video_id`, `real_dataset_id
 ('cd3e2f7d-a96f-4447-b026-7e65abf76af7','zhuLcLvZoIA','v7MqsQbI0Lc','id6_0004','id6_id37_0004','af9b3384-11bd-4678-b530-c8d9ea0819e7'),
 ('cfbe1303-e7be-48e8-9062-99d1a4e264a7','7heyqL3YtUU','POyUz-oALNc','id4_0009','id4_id21_0009','496ff28f-34b6-4164-965d-3e1bf8d43532'),
 ('fb620a4c-9c47-409a-8860-cb193de1d888','G2-OQ28MC5A','rdzO56SP2LA','id39_0004','id39_id47_0004','8f46078f-b31b-4f15-9c50-cfcc4f5d7af1'),
-('74f064b8-291d-4ebd-a4e7-713b4c976095','LkNvtfkR9T4','4jxvDKHyvPo','id5_0004','id5_id60_0004','b65a6973-81f1-4912-8949-91f4dfbb928e');
+('74f064b8-291d-4ebd-a4e7-713b4c976095','LkNvtfkR9T4','4jxvDKHyvPo','id5_0004','id5_id60_0004','b65a6973-81f1-4912-8949-91f4dfbb928e'),
+('883bb146-7d9c-4164-8fde-952fd66b8e5f','QrDpuJJ1S5c','TloKEAgVRBU','id13_0008','id13_id10_0008','001f7567-1a17-4cfa-8388-84d29d6ac6d1'),
+('ecfa9a13-4f5f-4ae1-9f56-1b6220d13632','CNWCerirI0Y','_0KUIhnsvdk','id13_0012','id13_id10_0012','001f7567-1a17-4cfa-8388-84d29d6ac6d1'),
+('f27aa697-dcd9-43a8-b638-1d8b4f322c33','YMshM3JqdK4','utaxI-o9tKw','id43_0002','id43_id40_0002','8f1b59f0-baf7-42c3-947d-e58c49038816'),
+('3ed0a565-d313-48ed-a76d-9459857b6bcc','AIG3QR5jRxw','QGmJTiR2pLA','id43_0004','id43_id47_0004','8f1b59f0-baf7-42c3-947d-e58c49038816');
