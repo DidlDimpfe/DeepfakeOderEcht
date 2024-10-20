@@ -45,19 +45,20 @@ export default async function Page({
 }: {
   params: { questionId: string };
 }) {
-  const question = await getQuestion(questionId);
+  const userToken = cookies().get("userToken")?.value;
+
+  if (!userToken) throw new Error("User token not found");
+
+  const [question, guess] = await Promise.all([
+    getQuestion(questionId),
+    getGuess(userToken, questionId),
+  ]);
 
   if (!question) {
     notFound();
   }
 
   const celebrity = await getCelebrity(question.celebrity_id);
-
-  const userToken = cookies().get("userToken")?.value;
-
-  if (!userToken) throw new Error("User token not found");
-
-  const guess = await getGuess(userToken, questionId);
 
   if (guess) {
     const failPercentage = await getFailPercentage(questionId);

@@ -1,11 +1,16 @@
 import BackButton from "@/components/BackButton";
-import CelebrityCard from "@/components/CelebrityCard";
 import PageHeading from "@/components/PageHeading";
 import Pagination from "@/components/Pagination";
+import QuestionView from "@/components/QuestionView";
 import Search from "@/components/Search";
 import Sort from "@/components/Sort";
-import { getCelebrities, getCelebritiesTotalPages } from "@/lib/queries";
+import {
+  getQuestionsTotalPages,
+  getQuestionsWithInfo,
+  SortOptions,
+} from "@/lib/queries";
 import { Metadata } from "next";
+import { cookies } from "next/headers";
 
 export const metadata: Metadata = {
   title: "Fragen-Übersicht",
@@ -15,13 +20,16 @@ export const metadata: Metadata = {
 export default async function OverviewPage({
   searchParams,
 }: {
-  searchParams: { query?: string; page?: string };
+  searchParams: { query?: string; page?: string; sort?: SortOptions };
 }) {
+  const userToken = cookies().get("userToken")?.value;
+  if (!userToken) throw new Error("User token not found");
   const query = searchParams?.query || "";
   const currentPage = Number(searchParams?.page) || 1;
-  const [celebrities, totalPages] = await Promise.all([
-    getCelebrities(query, currentPage),
-    getCelebritiesTotalPages(query),
+  const sort = searchParams?.sort || "most-guessed";
+  const [questionsWithInfo, totalPages] = await Promise.all([
+    getQuestionsWithInfo(query, currentPage, sort, userToken),
+    getQuestionsTotalPages(query),
   ]);
 
   return (
@@ -48,11 +56,11 @@ export default async function OverviewPage({
               label: "Höchste Fehlerquote",
             },
             {
-              value: "last-name-alphabetical-asc",
+              value: "last-name-asc",
               label: "A-Z (Nachname)",
             },
             {
-              value: "last-name-alphabetical-desc",
+              value: "last-name-desc",
               label: "Z-A (Nachname)",
             },
           ]}
@@ -60,13 +68,16 @@ export default async function OverviewPage({
       </div>
 
       <ul className="mb-4 space-y-3">
-        {celebrities.map((celebrity) => (
-          <CelebrityCard key={celebrity.id} celebrity={celebrity} />
+        {questionsWithInfo.map((questionWithInfo) => (
+          <QuestionView
+            questionWithInfo={questionWithInfo}
+            key={questionWithInfo.question_id}
+          />
         ))}
 
-        {celebrities.length === 0 && (
+        {questionsWithInfo.length === 0 && (
           <li className="text-center text-accent-500">
-            Keine Personen gefunden.
+            Keine Fragen gefunden.
           </li>
         )}
       </ul>

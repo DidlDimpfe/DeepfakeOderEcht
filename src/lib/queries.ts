@@ -61,52 +61,6 @@ export async function getRandomQuestionId(userToken: string) {
   }
 }
 
-export async function getAmountOfGuesses(questionId: string) {
-  interface QueryResult {
-    amountOfGuesses: number;
-  }
-
-  try {
-    const [[result]]: [QueryResult[], FieldPacket[]] = await queryDatabase(
-      `SELECT COUNT(*) AS amountOfGuesses FROM ${GUESS_TABLE_NAME} WHERE ${GUESS_COLUMN_QUESTION_ID} = ?`,
-      [questionId],
-    );
-
-    return result?.amountOfGuesses || 0;
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      throw new QueryError(
-        `Failed to fetch amount of guesses: ${error.message}`,
-      );
-    } else {
-      throw new QueryError(
-        `Failed to fetch amount of guesses: ${String(error)}`,
-      );
-    }
-  }
-}
-
-export async function getFailPercentage(questionId: string) {
-  interface QueryResult {
-    failPercentage: number;
-  }
-
-  try {
-    const [[result]]: [QueryResult[], FieldPacket[]] = await queryDatabase(
-      `SELECT (SUM(CASE WHEN ${GUESS_COLUMN_IS_CORRECT} = 0 THEN 1 ELSE 0 END) / COUNT(*)) * 100 AS failPercentage FROM ${GUESS_TABLE_NAME} WHERE ${GUESS_COLUMN_QUESTION_ID} = ?`,
-      [questionId],
-    );
-
-    return result?.failPercentage ? Number(result?.failPercentage) : null;
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      throw new QueryError(`Failed to fetch fail percentage: ${error.message}`);
-    } else {
-      throw new QueryError(`Failed to fetch fail percentage: ${String(error)}`);
-    }
-  }
-}
-
 export interface Question
   extends Omit<DatabaseQuestionTable, "real_dataset_id" | "fake_dataset_id"> {}
 
@@ -170,7 +124,7 @@ export async function getCelebrity(celebrityId: string) {
   }
 }
 
-export async function getCelebritiesTotalPages(query: string = "") {
+export async function getQuestionsTotalPages(query: string = "") {
   const queryParts = query.split(" ");
   if (queryParts.length > 2) return 0;
 
@@ -184,7 +138,9 @@ export async function getCelebritiesTotalPages(query: string = "") {
     const [totalResult]: [{ total: number }[], FieldPacket[]] =
       await queryDatabase(
         `SELECT COUNT(*) as total 
-       FROM ${CELEBRITY_TABLE_NAME} 
+       FROM ${QUESTION_TABLE_NAME} q
+       JOIN ${CELEBRITY_TABLE_NAME} c 
+          ON q.${QUESTION_COLUMN_CELEBRITY_ID} = c.${CELEBRITY_COLUMN_ID} 
        WHERE ${CELEBRITY_COLUMN_FIRST_NAME} LIKE ? ${hasMultipleNames ? "AND" : "OR"} ${CELEBRITY_COLUMN_LAST_NAME} LIKE ?`,
         [`%${firstName}%`, `%${hasMultipleNames ? lastName : firstName}%`],
       );
@@ -202,16 +158,27 @@ export async function getCelebritiesTotalPages(query: string = "") {
   }
 }
 
-type SortOptions =
+export type SortOptions =
   | "most-guessed"
   | "highest-error-rate"
-  | "last-name-alphabetical-asc"
-  | "last-name-alphabetical-desc";
+  | "last-name-asc"
+  | "last-name-desc";
 
-export async function getCelebrities(
+export interface QuestionWithInfo {
+  celebrity_first_name: string;
+  celebrity_last_name: string;
+  question_id: string;
+  totalGuesses: number;
+  failPercentage: number | null;
+  real_video_id: string;
+  userAnsweredCorrectly: boolean | null;
+}
+
+export async function getQuestionsWithInfo(
   query: string = "",
   page: number = 1,
   sort: SortOptions = "most-guessed",
+  userToken: string,
 ) {
   const queryParts = query.split(" ");
   if (queryParts.length > 2) return [];
@@ -224,41 +191,77 @@ export async function getCelebrities(
 
   const hasMultipleNames = lastName !== "";
 
-  let orderByClause: string = "ORDER BY";
+  let orderByClause: string;
 
   switch (sort) {
     case "most-guessed":
-      orderByClause = `(SELECT COUNT(*) FROM ${GUESS_TABLE_NAME} FROM gues)`;
+      orderByClause = `totalGuesses DESC, ${CELEBRITY_COLUMN_LAST_NAME} ASC`;
+      break;
+    case "last-name-asc":
+      orderByClause = `${CELEBRITY_COLUMN_LAST_NAME} ASC`;
+      break;
+    case "last-name-desc":
+      orderByClause = `${CELEBRITY_COLUMN_LAST_NAME} DESC`;
       break;
     case "highest-error-rate":
-      orderByClause = "ORDER BY failPercentage DESC";
-      break;
-    case "last-name-alphabetical-asc":
-      orderByClause = "ORDER BY last_name ASC";
-      break;
-    case "last-name-alphabetical-desc":
-      orderByClause = "ORDER BY last_name DESC";
+      orderByClause = `failPercentage DESC, ${CELEBRITY_COLUMN_LAST_NAME} ASC`;
       break;
     default:
-      orderByClause = "ORDER BY totalGuesses DESC";
+      orderByClause = "totalGuesses DESC, ${CELEBRITY_COLUMN_LAST_NAME} ASC";
   }
 
   try {
-    const [result]: [Celebrity[], FieldPacket[]] = await queryDatabase(
-      `SELECT ${CELEBRITY_COLUMN_ID}, ${CELEBRITY_COLUMN_GENDER}, ${CELEBRITY_COLUMN_FIRST_NAME}, ${CELEBRITY_COLUMN_LAST_NAME} 
-           FROM ${CELEBRITY_TABLE_NAME} 
-           WHERE ${CELEBRITY_COLUMN_FIRST_NAME} LIKE ? ${hasMultipleNames ? "AND" : "OR"} ${CELEBRITY_COLUMN_LAST_NAME} LIKE ?
-           ORDER BY ${CELEBRITY_COLUMN_LAST_NAME} ASC
-           LIMIT ? OFFSET ?`,
-      [
-        `%${firstName}%`,
-        `%${hasMultipleNames ? lastName : firstName}%`,
-        resultsPerPage,
-        offset,
-      ],
-    );
+    const [questionsWithInfo]: [QuestionWithInfo[], FieldPacket[]] =
+      await queryDatabase(
+        `SELECT 
+        c.${CELEBRITY_COLUMN_FIRST_NAME} AS celebrity_first_name, 
+        c.${CELEBRITY_COLUMN_LAST_NAME} AS celebrity_last_name, 
+        q.${QUESTION_COLUMN_ID} AS question_id,
+        q.${QUESTION_COLUMN_REAL_VIDEO_ID} AS real_video_id,
+        COUNT(g.${GUESS_COLUMN_QUESTION_ID}) AS totalGuesses, 
+          CASE 
+            WHEN COUNT(g.${GUESS_COLUMN_QUESTION_ID}) = 0 THEN NULL 
+            ELSE (SUM(CASE WHEN g.${GUESS_COLUMN_IS_CORRECT} = 0 THEN 1 ELSE 0 END) / COUNT(g.${GUESS_COLUMN_QUESTION_ID})) * 100 
+          END AS failPercentage,
+        (SELECT g2.is_correct 
+        FROM guess g2 
+          WHERE g2.question_id = q.id 
+          AND g2.user_token = ?
+        LIMIT 1) AS userAnsweredCorrectly
+        FROM ${QUESTION_TABLE_NAME} q
+      JOIN ${CELEBRITY_TABLE_NAME} c 
+        ON q.${QUESTION_COLUMN_CELEBRITY_ID} = c.${CELEBRITY_COLUMN_ID}
+      LEFT JOIN ${GUESS_TABLE_NAME} g 
+        ON q.${QUESTION_COLUMN_ID} = g.${GUESS_COLUMN_QUESTION_ID}
+      GROUP BY 
+        c.${CELEBRITY_COLUMN_ID}, 
+        q.${QUESTION_COLUMN_ID}
+      HAVING ${CELEBRITY_COLUMN_FIRST_NAME} LIKE ? ${hasMultipleNames ? "AND" : "OR"} ${CELEBRITY_COLUMN_LAST_NAME} LIKE ?
+      ORDER BY ${orderByClause}
+      LIMIT ? OFFSET ?`,
+        [
+          userToken,
+          `%${firstName}%`,
+          `%${hasMultipleNames ? lastName : firstName}%`,
+          resultsPerPage,
+          offset,
+        ],
+      );
 
-    return result;
+    const modifiedQuestionsWithInfo = questionsWithInfo.map((question) => {
+      return {
+        ...question,
+        failPercentage: question.failPercentage
+          ? Number(question.failPercentage)
+          : null,
+        userAnsweredCorrectly:
+          question.userAnsweredCorrectly === null
+            ? null
+            : Boolean(question.userAnsweredCorrectly),
+      };
+    });
+
+    return modifiedQuestionsWithInfo;
   } catch (error: unknown) {
     if (error instanceof Error) {
       throw new QueryError(`Failed to fetch celebrities: ${error.message}`);
@@ -378,6 +381,27 @@ export async function hasIPExceededLimit(
       throw new QueryError(
         `Failed to check if IP has exceeded limit: ${String(error)}`,
       );
+    }
+  }
+}
+
+export async function getFailPercentage(questionId: string) {
+  interface QueryResult {
+    failPercentage: number;
+  }
+
+  try {
+    const [[result]]: [QueryResult[], FieldPacket[]] = await queryDatabase(
+      `SELECT (SUM(CASE WHEN ${GUESS_COLUMN_IS_CORRECT} = 0 THEN 1 ELSE 0 END) / COUNT(*)) * 100 AS failPercentage FROM ${GUESS_TABLE_NAME} WHERE ${GUESS_COLUMN_QUESTION_ID} = ?`,
+      [questionId],
+    );
+
+    return result?.failPercentage ? Number(result?.failPercentage) : null;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new QueryError(`Failed to fetch fail percentage: ${error.message}`);
+    } else {
+      throw new QueryError(`Failed to fetch fail percentage: ${String(error)}`);
     }
   }
 }

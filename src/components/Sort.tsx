@@ -27,11 +27,13 @@ export default function Sort({
     replace(`${pathName}?${params.toString()}`);
   }
 
+  console.log(searchParams.get("sort")?.toString());
+
   return (
     <div className={`relative ${className}`}>
       <select
         ref={selectRef}
-        value={searchParams.get("search")?.toString()}
+        value={searchParams.get("sort")?.toString()}
         onChange={(e) => handleChange(e.target.value)}
         className="cursor-pointer appearance-none rounded-md bg-primary-850 px-3 py-2 pr-10 focus:outline-none disabled:cursor-not-allowed disabled:opacity-60"
       >
