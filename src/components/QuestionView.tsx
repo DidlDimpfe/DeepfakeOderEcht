@@ -19,18 +19,18 @@ export default async function QuestionView({
 }: {
   question: Question;
 }) {
-  // TODO responsive and additional info on bigger screens
   const userToken = cookies().get("userToken")?.value;
 
   if (!userToken) throw new Error("User token not found");
 
-  const guess = await getGuess(userToken, question.id);
+  const [guess, failPercentage, amountOfGuesses] = await Promise.all([
+    getGuess(userToken, question.id),
+    getFailPercentage(question.id),
+    getAmountOfGuesses(question.id),
+  ]);
 
-  const failPercentage = await getFailPercentage(question.id);
   const failPercentageLabel =
     failPercentage !== null ? `${failPercentage.toFixed(1)}%` : "N/A";
-
-  const amountOfGuesses = await getAmountOfGuesses(question.id);
 
   return (
     <li>

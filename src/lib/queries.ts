@@ -202,7 +202,17 @@ export async function getCelebritiesTotalPages(query: string = "") {
   }
 }
 
-export async function getCelebrities(query: string = "", page: number = 1) {
+type SortOptions =
+  | "most-guessed"
+  | "highest-error-rate"
+  | "last-name-alphabetical-asc"
+  | "last-name-alphabetical-desc";
+
+export async function getCelebrities(
+  query: string = "",
+  page: number = 1,
+  sort: SortOptions = "most-guessed",
+) {
   const queryParts = query.split(" ");
   if (queryParts.length > 2) return [];
 
@@ -213,6 +223,25 @@ export async function getCelebrities(query: string = "", page: number = 1) {
   const lastName = queryParts[1] ?? "";
 
   const hasMultipleNames = lastName !== "";
+
+  let orderByClause: string = "ORDER BY";
+
+  switch (sort) {
+    case "most-guessed":
+      orderByClause = `(SELECT COUNT(*) FROM ${GUESS_TABLE_NAME} FROM gues)`;
+      break;
+    case "highest-error-rate":
+      orderByClause = "ORDER BY failPercentage DESC";
+      break;
+    case "last-name-alphabetical-asc":
+      orderByClause = "ORDER BY last_name ASC";
+      break;
+    case "last-name-alphabetical-desc":
+      orderByClause = "ORDER BY last_name DESC";
+      break;
+    default:
+      orderByClause = "ORDER BY totalGuesses DESC";
+  }
 
   try {
     const [result]: [Celebrity[], FieldPacket[]] = await queryDatabase(

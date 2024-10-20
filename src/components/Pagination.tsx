@@ -44,7 +44,7 @@ export default function Pagination({
 
             return (
               <PaginationNumber
-                key={page}
+                key={index}
                 href={createPageURL(page)}
                 page={page}
                 position={position}
@@ -76,7 +76,7 @@ function PaginationNumber({
   isActive: boolean;
 }) {
   const className = [
-    "flex h-10 w-10 items-center justify-center text-sm border border-primary-825",
+    "flex h-8 w-8 items-center justify-center text-sm border border-primary-825 lg:h-10 lg:w-10",
     (position === "first" || position === "single") && "rounded-l-md",
     (position === "last" || position === "single") && "rounded-r-md",
     isActive ? "bg-primary-600 " : "hover:bg-primary-850  bg-primary-875",
@@ -104,7 +104,7 @@ function PaginationArrow({
   isDisabled?: boolean;
 }) {
   const className = [
-    "flex h-10 w-10 items-center justify-center rounded-md border border-primary-825 ",
+    "flex h-8 w-8 items-center justify-center rounded-md border border-primary-825 lg:h-10 lg:w-10",
     isDisabled
       ? "pointer-events-none text-accent-300 border-primary-850"
       : "hover:bg-primary-850 bg-primary-875",
