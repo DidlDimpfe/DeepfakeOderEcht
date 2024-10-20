@@ -1,4 +1,5 @@
 import { FieldPacket } from "mysql2";
+import { RESULTS_PER_PAGE_OVERVIEW } from "./config";
 import {
   DatabaseCelebrityTable,
   DatabaseGuessTable,
@@ -55,6 +56,31 @@ export async function getRandomQuestionId(userToken: string) {
     } else {
       throw new QueryError(
         `Failed to fetch random question id: ${String(error)}`,
+      );
+    }
+  }
+}
+
+export async function getAmountOfGuesses(questionId: string) {
+  interface QueryResult {
+    amountOfGuesses: number;
+  }
+
+  try {
+    const [[result]]: [QueryResult[], FieldPacket[]] = await queryDatabase(
+      `SELECT COUNT(*) AS amountOfGuesses FROM ${GUESS_TABLE_NAME} WHERE ${GUESS_COLUMN_QUESTION_ID} = ?`,
+      [questionId],
+    );
+
+    return result?.amountOfGuesses || 0;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new QueryError(
+        `Failed to fetch amount of guesses: ${error.message}`,
+      );
+    } else {
+      throw new QueryError(
+        `Failed to fetch amount of guesses: ${String(error)}`,
       );
     }
   }
@@ -144,12 +170,65 @@ export async function getCelebrity(celebrityId: string) {
   }
 }
 
-export async function getCelebrities() {
+export async function getCelebritiesTotalPages(query: string = "") {
+  const queryParts = query.split(" ");
+  if (queryParts.length > 2) return 0;
+
+  const firstName = queryParts[0] ?? "";
+  const lastName = queryParts[1] ?? "";
+  const resultsPerPage = RESULTS_PER_PAGE_OVERVIEW;
+
+  const hasMultipleNames = lastName !== "";
+
+  try {
+    const [totalResult]: [{ total: number }[], FieldPacket[]] =
+      await queryDatabase(
+        `SELECT COUNT(*) as total 
+       FROM ${CELEBRITY_TABLE_NAME} 
+       WHERE ${CELEBRITY_COLUMN_FIRST_NAME} LIKE ? ${hasMultipleNames ? "AND" : "OR"} ${CELEBRITY_COLUMN_LAST_NAME} LIKE ?`,
+        [`%${firstName}%`, `%${hasMultipleNames ? lastName : firstName}%`],
+      );
+
+    const totalResults = totalResult[0].total;
+    const totalPages = Math.ceil(totalResults / resultsPerPage);
+
+    return totalPages;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new QueryError(`Failed to fetch celebrities: ${error.message}`);
+    } else {
+      throw new QueryError(`Failed to fetch celebrities: ${String(error)}`);
+    }
+  }
+}
+
+export async function getCelebrities(query: string = "", page: number = 1) {
+  const queryParts = query.split(" ");
+  if (queryParts.length > 2) return [];
+
+  const resultsPerPage = RESULTS_PER_PAGE_OVERVIEW;
+  const offset = (page - 1) * resultsPerPage;
+
+  const firstName = queryParts[0] ?? "";
+  const lastName = queryParts[1] ?? "";
+
+  const hasMultipleNames = lastName !== "";
+
   try {
     const [result]: [Celebrity[], FieldPacket[]] = await queryDatabase(
-      `SELECT ${CELEBRITY_COLUMN_ID}, ${CELEBRITY_COLUMN_GENDER}, ${CELEBRITY_COLUMN_FIRST_NAME}, ${CELEBRITY_COLUMN_LAST_NAME} FROM ${CELEBRITY_TABLE_NAME} ORDER BY ${CELEBRITY_COLUMN_LAST_NAME} ASC`,
+      `SELECT ${CELEBRITY_COLUMN_ID}, ${CELEBRITY_COLUMN_GENDER}, ${CELEBRITY_COLUMN_FIRST_NAME}, ${CELEBRITY_COLUMN_LAST_NAME} 
+           FROM ${CELEBRITY_TABLE_NAME} 
+           WHERE ${CELEBRITY_COLUMN_FIRST_NAME} LIKE ? ${hasMultipleNames ? "AND" : "OR"} ${CELEBRITY_COLUMN_LAST_NAME} LIKE ?
+           ORDER BY ${CELEBRITY_COLUMN_LAST_NAME} ASC
+           LIMIT ? OFFSET ?`,
+      [
+        `%${firstName}%`,
+        `%${hasMultipleNames ? lastName : firstName}%`,
+        resultsPerPage,
+        offset,
+      ],
     );
-    0;
+
     return result;
   } catch (error: unknown) {
     if (error instanceof Error) {

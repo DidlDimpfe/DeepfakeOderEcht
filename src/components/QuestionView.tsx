@@ -1,4 +1,9 @@
-import { getGuess, Question } from "@/lib/queries";
+import {
+  getAmountOfGuesses,
+  getFailPercentage,
+  getGuess,
+  Question,
+} from "@/lib/queries";
 
 import {
   CheckCircleIcon,
@@ -21,6 +26,12 @@ export default async function QuestionView({
 
   const guess = await getGuess(userToken, question.id);
 
+  const failPercentage = await getFailPercentage(question.id);
+  const failPercentageLabel =
+    failPercentage !== null ? `${failPercentage.toFixed(1)}%` : "N/A";
+
+  const amountOfGuesses = await getAmountOfGuesses(question.id);
+
   return (
     <li>
       <Link
@@ -33,25 +44,39 @@ export default async function QuestionView({
             className="h-[68px] w-[120px]"
           />
 
-          <div className="flex flex-grow flex-col items-center justify-center gap-1">
-            {guess === null && (
-              <>
-                <NoSymbolIcon className="h-10 w-10 flex-grow text-gray-300" />
-                <span>Unbeantwortet</span>
-              </>
-            )}
-            {guess?.is_correct === true && (
-              <>
-                <CheckCircleIcon className="h-10 w-10 flex-grow text-green-500" />
-                <span>Richtig</span>
-              </>
-            )}
-            {guess?.is_correct === false && (
-              <>
-                <XCircleIcon className="h-10 w-10 flex-grow text-red-500" />
-                <span>Falsch</span>
-              </>
-            )}
+          <div className="flex flex-grow items-center justify-around">
+            <div className="hidden w-28 flex-col items-center justify-center gap-1 text-center lg:flex">
+              <span className="text-md">Gesamtversuche:</span>
+              <span className="text-2xl font-semibold">{amountOfGuesses}</span>
+            </div>
+
+            <div className="flex w-28 flex-col items-center justify-center gap-1">
+              {guess === null && (
+                <>
+                  <NoSymbolIcon className="h-10 w-10 flex-grow text-gray-300" />
+                  <span>Unbeantwortet</span>
+                </>
+              )}
+              {guess?.is_correct === true && (
+                <>
+                  <CheckCircleIcon className="h-10 w-10 flex-grow text-green-500" />
+                  <span>Richtig</span>
+                </>
+              )}
+              {guess?.is_correct === false && (
+                <>
+                  <XCircleIcon className="h-10 w-10 flex-grow text-red-500" />
+                  <span>Falsch</span>
+                </>
+              )}
+            </div>
+
+            <div className="hidden w-28 flex-col items-center justify-center gap-1 text-center sm:flex">
+              <span className="text-md">Fehlerquote:</span>
+              <span className="text-2xl font-semibold">
+                {failPercentageLabel}
+              </span>
+            </div>
           </div>
         </div>
       </Link>
