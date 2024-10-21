@@ -385,7 +385,7 @@ export async function hasIPExceededLimit(
   }
 }
 
-export async function getFailPercentage(questionId: string) {
+export async function getFailPercentageFromQuestion(questionId: string) {
   interface QueryResult {
     failPercentage: number;
   }
@@ -394,6 +394,27 @@ export async function getFailPercentage(questionId: string) {
     const [[result]]: [QueryResult[], FieldPacket[]] = await queryDatabase(
       `SELECT (SUM(CASE WHEN ${GUESS_COLUMN_IS_CORRECT} = 0 THEN 1 ELSE 0 END) / COUNT(*)) * 100 AS failPercentage FROM ${GUESS_TABLE_NAME} WHERE ${GUESS_COLUMN_QUESTION_ID} = ?`,
       [questionId],
+    );
+
+    return result?.failPercentage ? Number(result?.failPercentage) : null;
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      throw new QueryError(`Failed to fetch fail percentage: ${error.message}`);
+    } else {
+      throw new QueryError(`Failed to fetch fail percentage: ${String(error)}`);
+    }
+  }
+}
+
+export async function getFailPercentageFromUser(userToken: string) {
+  interface QueryResult {
+    failPercentage: number;
+  }
+
+  try {
+    const [[result]]: [QueryResult[], FieldPacket[]] = await queryDatabase(
+      `SELECT (SUM(CASE WHEN ${GUESS_COLUMN_IS_CORRECT} = 0 THEN 1 ELSE 0 END) / COUNT(*)) * 100 AS failPercentage FROM ${GUESS_TABLE_NAME} WHERE ${GUESS_COLUMN_USER_TOKEN} = ?`,
+      [userToken],
     );
 
     return result?.failPercentage ? Number(result?.failPercentage) : null;

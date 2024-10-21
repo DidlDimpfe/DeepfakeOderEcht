@@ -10,15 +10,19 @@ const roboto = Roboto({
 import Header from "@/components/Header";
 import Spinner from "@/components/Spinner";
 import "@/styles/globals.css";
+import { Metadata } from "next";
 import { Suspense } from "react";
 
-export const metadata = {
+export const metadata: Metadata = {
   title: {
     template: "%s | Deepfake Oder Echt?",
     default: "Deepfake Oder Echt?",
   },
   description:
     "Das Deepfake-Quiz ist ein interaktives Quiz, das dir dabei hilft, zu verstehen, wie Deepfakes funktionieren und wie du sie erkennen kannst.",
+  twitter: {
+    card: "summary_large_image",
+  },
 };
 
 export default function RootLayout({

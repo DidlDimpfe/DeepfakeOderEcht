@@ -1,5 +1,7 @@
 import Button from "@/components/Button";
-import { getRandomQuestionId } from "@/lib/queries";
+import Heading from "@/components/Heading";
+import ReviewChart from "@/components/ReviewChart";
+import { getFailPercentageFromUser, getRandomQuestionId } from "@/lib/queries";
 import { Metadata } from "next";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -20,13 +22,42 @@ export default async function AllAnsweredPage() {
     return redirect(`/${possibleQuestion}`);
   }
 
-  return (
-    <main className="flex-1">
-      <p>Alle Fragen wurden beantwortet!</p>
+  const failPercentage = await getFailPercentageFromUser(userToken);
 
-      <Button type="primary" size="lg" href="/overview">
-        Fragenübersicht
-      </Button>
+  if (failPercentage === null) {
+    throw new Error("User data not found");
+  }
+
+  const data = [
+    {
+      name: "Richtig",
+      value: 100 - Number(failPercentage.toFixed(2)),
+      color: "#84cc16",
+    },
+    {
+      name: "Falsch",
+      value: Number(failPercentage.toFixed(2)),
+      color: "#dc2626",
+    },
+  ];
+
+  return (
+    <main className="container mx-auto flex-1 gap-4 pt-4 lg:pt-6">
+      <Heading as="h2" className="text-center">
+        Alle Fragen wurden beantwortet!
+      </Heading>
+
+      <Heading as="h3" className="mb-1 mt-8 text-center" size="sm">
+        Deine Statistik
+      </Heading>
+
+      <div className="flex flex-col items-center gap-8">
+        <ReviewChart data={data} />
+
+        <Button type="primary" size="lg" href="/overview">
+          Fragenübersicht
+        </Button>
+      </div>
     </main>
   );
 }

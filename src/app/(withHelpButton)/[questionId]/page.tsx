@@ -7,7 +7,7 @@ import PageHeading from "@/components/PageHeading";
 import Questions from "@/components/Questions";
 import {
   getCelebrity,
-  getFailPercentage,
+  getFailPercentageFromQuestion,
   getGuess,
   getQuestion,
   getQuestionIDs,
@@ -61,7 +61,7 @@ export default async function Page({
   const celebrity = await getCelebrity(question.celebrity_id);
 
   if (guess) {
-    const failPercentage = await getFailPercentage(questionId);
+    const failPercentage = await getFailPercentageFromQuestion(questionId);
     const failPercentageLabel =
       failPercentage !== null ? `${failPercentage.toFixed(1)}%` : "N/A";
 
