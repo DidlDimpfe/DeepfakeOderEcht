@@ -27,8 +27,6 @@ export default function Sort({
     replace(`${pathName}?${params.toString()}`);
   }
 
-  console.log(searchParams.get("sort")?.toString());
-
   return (
     <div className={`relative ${className}`}>
       <select
@@ -43,10 +41,7 @@ export default function Sort({
           </option>
         ))}
       </select>
-      <ChevronDownIcon
-        className="absolute right-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 cursor-pointer text-accent-400 peer-focus:text-accent-700"
-        onClick={() => console.log(selectRef.current?.showPicker())}
-      />
+      <ChevronDownIcon className="absolute right-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 cursor-pointer text-accent-400 peer-focus:text-accent-700" />
     </div>
   );
 }
